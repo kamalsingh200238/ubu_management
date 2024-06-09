@@ -1,0 +1,41 @@
+{
+  "name": "ubu_management",
+  "version": "1.0.0",
+  "description": "One Paragraph of project description goes here",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "laravel-mix": "^6.0.49",
+    "postcss": "^8.4.38",
+    "prettier": "^3.2.5",
+    "prettier-plugin-sql": "^0.18.0",
+    "rustywind": "^0.22.0",
+    "tailwindcss": "^3.4.3",
+    "webpack": "^5.91.0"
+  },
+  "dependencies": {
+    "@shoelace-style/shoelace": "^2.15.0",
+    "htmx.org": "^1.9.11",
+    "hyperscript.org": "^0.9.12"
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "tabWidth": 2,
+    "semi": true,
+    "singleQuote": false,
+    "plugins": [
+      "prettier-plugin-sql"
+    ],
+    "language": "postgresql",
+    "keywordCase": "upper"
+  }
+}

@@ -1,0 +1,78 @@
+package templates
+
+type LoginFormErrors struct {
+	EmailError    string
+	PasswrodError string
+}
+
+templ LoginPage(formErrors LoginFormErrors) {
+	@BaseLayout(BaseLayoutParams{Title: "Login page"}) {
+		<main class="flex justify-center mt-44">
+			<sl-tab-group>
+				<sl-tab slot="nav" panel="coordinator" class="w-1/2 text-center">Society Coordinator</sl-tab>
+				<sl-tab slot="nav" panel="student" class="w-1/2 text-center">Student</sl-tab>
+				<sl-tab-panel name="coordinator">
+					<!-- Form for society coordinator login -->
+					<form id="coordinator-form" class="py-5 px-10 min-h-40 min-w-[40rem]" hx-post="/coordinator-login" hx-select="#coordinator-form" hx-swap="outerHTML">
+						<sl-input
+							id="coordinator-email"
+							type="email"
+							placeholder="Email"
+							name="email"
+							label="Email"
+							class={ "w-full", templ.KV("input-danger", formErrors.EmailError != "") }
+							if formErrors.EmailError != "" {
+								help-text={ formErrors.EmailError }
+							}
+							required
+						></sl-input>
+						<sl-input
+							id="coordinator-password"
+							type="password"
+							placeholder="Password"
+							name="password"
+							label="Password"
+							class={ "mt-6 w-full", templ.KV("input-danger", formErrors.PasswrodError != "") }
+							if formErrors.PasswrodError != "" {
+								help-text={ formErrors.PasswrodError }
+							}
+							required
+							password-toggle
+						></sl-input>
+						<sl-button class="mt-10 w-full" type="submit">Submit</sl-button>
+					</form>
+				</sl-tab-panel>
+				<sl-tab-panel name="student">
+					<form id="student-form" class="py-5 px-10 min-h-40 min-w-[40rem]" hx-post="/student-login" hx-select="#student-form" hx-swap="outerHTML">
+						<sl-input
+							id="student-email"
+							type="email"
+							placeholder="Email"
+							name="email"
+							label="Email"
+							class={ "w-full", templ.KV("input-danger", formErrors.EmailError != "") }
+							if formErrors.EmailError != "" {
+								help-text={ formErrors.EmailError }
+							}
+							required
+						></sl-input>
+						<sl-input
+							id="student-password"
+							type="password"
+							placeholder="Password"
+							name="password"
+							label="Password"
+							class={ "mt-6 w-full", templ.KV("input-danger", formErrors.PasswrodError != "") }
+							if formErrors.PasswrodError != "" {
+								help-text={ formErrors.PasswrodError }
+							}
+							required
+							password-toggle
+						></sl-input>
+						<sl-button class="mt-10 w-full" type="submit">Submit</sl-button>
+					</form>
+				</sl-tab-panel>
+			</sl-tab-group>
+		</main>
+	}
+}

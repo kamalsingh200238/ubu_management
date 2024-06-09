@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+sl-input.input-danger {
+  --sl-input-border-color: var(--sl-color-danger-500);
+  --sl-input-border-color-focus: var(--sl-color-danger-500);
+  --sl-input-focus-ring-color: var(--sl-color-danger-500);
+  --sl-input-help-text-color: var(--sl-color-danger-800);
+}

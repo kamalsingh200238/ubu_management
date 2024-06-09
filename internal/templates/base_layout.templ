@@ -1,0 +1,31 @@
+package templates
+
+type BaseLayoutParams struct {
+	JsTags   templ.Component
+	MetaTags templ.Component
+	Title    string
+}
+
+templ BaseLayout(params BaseLayoutParams) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+			if params.MetaTags != nil {
+				@params.MetaTags
+			}
+			<title>{ params.Title }</title>
+			<link href="assets/css/main.css" rel="stylesheet"/>
+			<script defer type="module" src="assets/js/main.js"></script>
+			if params.JsTags != nil {
+				@params.JsTags
+			}
+		</head>
+		<body hx-ext="shoelace">
+			{ children... }
+			<div id="alert-toast-wrapper"></div>
+			<div id="modal-wrapper"></div>
+		</body>
+	</html>
+}

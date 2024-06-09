@@ -1,0 +1,146 @@
+package templates
+
+import "github.com/kamalsingh200238/ubu_management/internal/database"
+import "fmt"
+
+templ CoordinatorDashboard(socities []database.GetAllSocietiesWithPresidentWithStudentCountRow) {
+	@BaseLayout(BaseLayoutParams{Title: "Home page"}) {
+		<main class="px-10 mx-auto max-w-7xl">
+			<div class="flex justify-between items-center">
+				<h1>List of socities</h1>
+				<sl-button
+					variant="primary"
+					hx-get="/coordinator/create-society-modal"
+					hx-target="#modal-wrapper"
+					hx-swap="innerHTML"
+				>
+					Create Society
+				</sl-button>
+			</div>
+			<table
+				id="coordinator-table"
+				hx-on::afterSwap="console.log('swap from table itself')"
+			>
+				<thead>
+					<tr class="bg-zinc-100">
+						<th class="border border-zinc-300">Society Name</th>
+						<th class="border border-zinc-300">Society Active</th>
+						<th class="border border-zinc-300">President Name</th>
+						<th class="border border-zinc-300">Society Action</th>
+						<th class="border border-zinc-300">Edit Society</th>
+						<th class="border border-zinc-300">Enrolled students</th>
+					</tr>
+				</thead>
+				for _, s := range socities {
+					<tbody>
+						<tr>
+							<td>{ s.SocietyName }</td>
+							<td>{ fmt.Sprintf("%v", s.SocietyActive.Bool) }</td>
+							<td>{ s.PresidentName.String }</td>
+							if s.SocietyActive.Bool {
+								<td>
+									<button
+										hx-patch={ fmt.Sprintf("/coordinator/disable-society/%v", s.SocietyID) }
+										hx-target="#coordinator-table"
+										hx-select="#coordinator-table"
+										hx-confirm={ fmt.Sprintf("Are you sure you want to disable %v?", s.SocietyName) }
+										hx-swap="outerHTML"
+									>
+										Disable
+									</button>
+								</td>
+							} else {
+								<td>
+									<button
+										hx-patch={ fmt.Sprintf("/coordinator/enable-society/%v", s.SocietyID) }
+										hx-swap="outerHTML"
+										hx-target="#coordinator-table"
+										hx-select="#coordinator-table"
+										hx-confirm={ fmt.Sprintf("Are you sure you want to enable %v?", s.SocietyName) }
+									>
+										Enable
+									</button>
+								</td>
+							}
+							<td>
+								<button
+									hx-get={ fmt.Sprintf("/coordinator/edit-society-modal/%v", s.SocietyID) }
+									hx-swap="innerHTML"
+									hx-target="#modal-wrapper"
+								>
+									Edit
+								</button>
+							</td>
+							<td>{ fmt.Sprintf("%v", s.EnrolledStudentCount) }</td>
+						</tr>
+					</tbody>
+				}
+			</table>
+		</main>
+	}
+}
+
+type EditSocietyModalParams struct {
+	SocietyID                  int
+	SocietyName                string
+	SocietyPresidentEmail      string
+	SocietyActive              bool
+	SocietyNameError           string
+	SocietyPresidentEmailError string
+}
+
+templ EditSocietyModal(params EditSocietyModalParams) {
+	<sl-dialog
+		id="edit-society-dialog"
+		label="Edit Society"
+		_="
+			init call my.show() end
+			on 'sl-after-hide' remove me end
+			on htmx:afterSwap from document call my.hide() end
+		"
+	>
+		<form
+			id="edit-society-form"
+			hx-patch={ fmt.Sprintf("/coordinator/edit-society/%v", params.SocietyID) }
+			hx-target="#coordinator-table"
+			hx-select="#coordinator-table"
+			hx-swap="outerHTML"
+		>
+			<div class="flex flex-col gap-5 mx-5 mb-5">
+				<sl-input
+					name="societyName"
+					label="Society Name"
+					value={ params.SocietyName }
+					class={ "w-full", templ.KV("input-danger", params.SocietyNameError != "") }
+					if params.SocietyNameError != "" {
+						help-text={ params.SocietyNameError }
+					}
+					required
+				></sl-input>
+				<sl-input
+					name="presidentEmail"
+					label="President's Email"
+					type="email"
+					value={ params.SocietyPresidentEmail }
+					class={ "w-full", templ.KV("input-danger", params.SocietyPresidentEmailError != "") }
+					if params.SocietyPresidentEmailError != "" {
+						help-text={ params.SocietyPresidentEmailError }
+					}
+					required
+				></sl-input>
+				<sl-checkbox
+					name="societyActive"
+					label="societyActive"
+					checked?={ params.SocietyActive }
+					value="true"
+				>
+					Society Active
+				</sl-checkbox>
+				<div class="grid grid-cols-2 gap-2 mt-5">
+					<sl-button slot="footer" type="submit" variant="default">Submit</sl-button>
+					<sl-button _="on click call #edit-society-dialog.hide()" variant="danger">Cancel</sl-button>
+				</div>
+			</div>
+		</form>
+	</sl-dialog>
+}
