@@ -144,3 +144,67 @@ templ EditSocietyModal(params EditSocietyModalParams) {
 		</form>
 	</sl-dialog>
 }
+
+type CreateSocietyModalParams struct {
+	SocietyName                string
+	SocietyPresidentEmail      string
+	SocietyActive              bool
+	SocietyNameError           string
+	SocietyPresidentEmailError string
+}
+
+templ CreateSocietyModal(params CreateSocietyModalParams) {
+<sl-dialog
+		id="create-society-dialog"
+		label="Create Society"
+		_="
+			init call my.show() end
+			on 'sl-after-hide' remove me end
+			on htmx:afterSwap from document call my.hide() end
+		"
+	>
+		<form
+			id="create-society-form"
+			hx-patch="/coordinator/create-society"
+			hx-target="#coordinator-table"
+			hx-select="#coordinator-table"
+			hx-swap="outerHTML"
+		>
+			<div class="flex flex-col gap-5 mx-5 mb-5">
+				<sl-input
+					name="societyName"
+					label="Society Name"
+					value={ params.SocietyName }
+					class={ "w-full", templ.KV("input-danger", params.SocietyNameError != "") }
+					if params.SocietyNameError != "" {
+						help-text={ params.SocietyNameError }
+					}
+					required
+				></sl-input>
+				<sl-input
+					name="presidentEmail"
+					label="President's Email"
+					type="email"
+					value={ params.SocietyPresidentEmail }
+					class={ "w-full", templ.KV("input-danger", params.SocietyPresidentEmailError != "") }
+					if params.SocietyPresidentEmailError != "" {
+						help-text={ params.SocietyPresidentEmailError }
+					}
+					required
+				></sl-input>
+				<sl-checkbox
+					name="societyActive"
+					label="societyActive"
+					checked?={ params.SocietyActive }
+					value="true"
+				>
+					Society Active
+				</sl-checkbox>
+				<div class="grid grid-cols-2 gap-2 mt-5">
+					<sl-button slot="footer" type="submit" variant="default">Submit</sl-button>
+					<sl-button _="on click call #edit-society-dialog.hide()" variant="danger">Cancel</sl-button>
+				</div>
+			</div>
+		</form>
+	</sl-dialog>
+}
