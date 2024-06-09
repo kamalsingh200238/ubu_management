@@ -186,6 +186,12 @@ func EditSociety(c echo.Context) error {
 	return utils.Render(c, http.StatusOK, templates.CoordinatorDashboard(societies))
 }
 
-// func ShowCreateSocietyModal(c echo.Context) error {
-//
-// }
+func ShowCreateSocietyModal(c echo.Context) error {
+	return utils.Render(c, http.StatusOK, templates.CreateSocietyModal(templates.CreateSocietyModalParams{
+		SocietyName:                "",
+		SocietyActive:              false,
+		SocietyPresidentEmail:      "",
+		SocietyNameError:           "",
+		SocietyPresidentEmailError: "",
+	}))
+}
