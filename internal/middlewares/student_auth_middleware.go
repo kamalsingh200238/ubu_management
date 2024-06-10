@@ -13,7 +13,7 @@ type PresidentInfo struct {
 	SocietyID int
 }
 
-func AuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
+func StudentAuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		token, err := c.Cookie("token")
 		if err != nil {
@@ -85,28 +85,6 @@ func AuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 			return next(c)
 		}
 
-		if jwtPayload.Role == utils.Coordinator {
-			exist, _, err := services.CheckCoordinatorExistsByEmail(jwtPayload.Email)
-			if err != nil {
-				slog.Error("error in checking coordinator", err)
-				return utils.Redirect(c, "/login")
-			}
-
-			if !exist {
-				slog.Error("coordinator does not exist in the db", err)
-				return utils.Redirect(c, "/")
-			}
-
-			jsonData, err := json.Marshal(jwtPayload)
-			if err != nil {
-				slog.Error("error in json marshal", err)
-				return utils.Redirect(c, "/login")
-			}
-
-			c.Set("jwtPayload", jsonData)
-			return next(c)
-		}
-
-		return utils.Redirect(c, "/")
+		return utils.Redirect(c, "/login")
 	}
 }
