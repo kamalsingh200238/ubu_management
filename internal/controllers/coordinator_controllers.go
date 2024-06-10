@@ -2,11 +2,15 @@ package controllers
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"log/slog"
 	"net/http"
 
 	"github.com/angelofallars/htmx-go"
 	"github.com/gookit/validate"
+	"github.com/jackc/pgerrcode"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/kamalsingh200238/ubu_management/internal/database"
 	"github.com/kamalsingh200238/ubu_management/internal/services"
@@ -194,4 +198,122 @@ func ShowCreateSocietyModal(c echo.Context) error {
 		SocietyNameError:           "",
 		SocietyPresidentEmailError: "",
 	}))
+}
+
+func CreateSociety(c echo.Context) error {
+	// the form values out
+	formValues := struct {
+		SocietyName    string `json:"societyName" form:"societyName" validate:"required" message:"required:Field is required"`
+		SocietyActive  bool   `json:"societyActive" form:"societyActive" validate:"bool"`
+		PresidentEmail string `json:"presidentEmail" form:"presidentEmail" validate:"required|email" message:"required:field is required|email:Invalid email address"`
+	}{}
+	err := (&echo.DefaultBinder{}).BindBody(c, &formValues)
+	if err != nil {
+		slog.Error("in getting form values", err)
+		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
+			Message:  "Internal server error",
+			Closable: true,
+			Variant:  utils.AlertVariantDanger,
+			Duration: 3000,
+		})).Write(c.Response().Writer)
+		return c.NoContent(http.StatusInternalServerError)
+	}
+
+	societyNameError := ""
+	societyPresidentEmailError := ""
+
+	v := validate.Struct(formValues)
+	v.StopOnError = false
+	if !v.Validate() {
+		for field := range v.Errors.All() {
+			switch field {
+			case "SocietyName":
+				societyNameError = v.Errors.FieldOne(field)
+			case "PresidentEmail":
+				societyPresidentEmailError = v.Errors.FieldOne(field)
+			}
+		}
+		htmx.NewResponse().Retarget("#modal-wrapper").Reswap("innerHTML").Reselect("#create-society-dialog").Write(c.Response().Writer)
+		return utils.Render(c, http.StatusOK, templates.CreateSocietyModal(templates.CreateSocietyModalParams{
+			SocietyName:                formValues.SocietyName,
+			SocietyActive:              formValues.SocietyActive,
+			SocietyPresidentEmail:      formValues.PresidentEmail,
+			SocietyNameError:           societyNameError,
+			SocietyPresidentEmailError: societyPresidentEmailError,
+		}))
+	}
+
+	exist, student, err := services.CheckStudentExistByEmail(formValues.PresidentEmail)
+	if err != nil {
+		slog.Error("in getting student", err)
+		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
+			Message:  "Internal server error",
+			Closable: true,
+			Variant:  utils.AlertVariantDanger,
+			Duration: 3000,
+		})).Write(c.Response().Writer)
+		return c.NoContent(http.StatusInternalServerError)
+	}
+
+	if !exist {
+		societyPresidentEmailError = "Wrong email, no student found with this email"
+		htmx.NewResponse().Retarget("#modal-wrapper").Reswap("innerHTML").Reselect("#create-society-dialog").Write(c.Response().Writer)
+		return utils.Render(c, http.StatusOK, templates.CreateSocietyModal(templates.CreateSocietyModalParams{
+			SocietyName:                formValues.SocietyName,
+			SocietyActive:              formValues.SocietyActive,
+			SocietyPresidentEmail:      formValues.PresidentEmail,
+			SocietyNameError:           societyNameError,
+			SocietyPresidentEmailError: societyPresidentEmailError,
+		}))
+	}
+
+	_, err = database.DBQueries.AddSociety(context.Background(), database.AddSocietyParams{
+		Name:        formValues.SocietyName,
+		Active:      pgtype.Bool{Bool: formValues.SocietyActive, Valid: true},
+		PresidentID: pgtype.Int4{Int32: student.ID, Valid: true},
+	})
+
+	if err != nil {
+		slog.Error("in creating society", err)
+		var e *pgconn.PgError
+		if errors.As(err, &e) && e.Code == pgerrcode.UniqueViolation {
+			fmt.Println(e, e.Code, e.ColumnName, e.ColumnName, e.TableName, e.Position, e.DataTypeName, e.Detail, e.SchemaName)
+			societyPresidentEmailError = "Student already a president"
+			htmx.NewResponse().Retarget("#modal-wrapper").Reswap("innerHTML").Reselect("#create-society-dialog").Write(c.Response().Writer)
+			return utils.Render(c, http.StatusOK, templates.CreateSocietyModal(templates.CreateSocietyModalParams{
+				SocietyName:                formValues.SocietyName,
+				SocietyActive:              formValues.SocietyActive,
+				SocietyPresidentEmail:      formValues.PresidentEmail,
+				SocietyNameError:           societyNameError,
+				SocietyPresidentEmailError: societyPresidentEmailError,
+			}))
+		}
+		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
+			Message:  "Internal server error",
+			Closable: true,
+			Variant:  utils.AlertVariantDanger,
+			Duration: 3000,
+		})).Write(c.Response().Writer)
+		return c.NoContent(http.StatusInternalServerError)
+	}
+
+	societies, err := database.DBQueries.GetAllSocietiesWithPresidentWithStudentCount(context.Background())
+	if err != nil {
+		slog.Error("in getting societies", err)
+		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
+			Message:  "Internal server error",
+			Closable: true,
+			Variant:  utils.AlertVariantDanger,
+			Duration: 3000,
+		})).Write(c.Response().Writer)
+		return c.NoContent(http.StatusInternalServerError)
+	}
+
+	htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
+		Message:  "Edited society successfully",
+		Closable: true,
+		Variant:  utils.AlertVariantSuccess,
+		Duration: 3000,
+	})).Write(c.Response().Writer)
+	return utils.Render(c, http.StatusOK, templates.CoordinatorDashboard(societies))
 }
