@@ -13,7 +13,7 @@ func RegisterRoutes(e *echo.Echo) {
 	e.POST("/coordinator-login", controllers.CooridnatorLogin)
 	e.POST("/student-login", controllers.StudentLogin)
 
-	coordinatorGroup := e.Group("/coordinator", middlewares.AuthMiddleware)
+	coordinatorGroup := e.Group("/coordinator", middlewares.CoordinatorAuthMiddleware)
 	coordinatorGroup.GET("", controllers.ShowCoordinatorDashboard)
 	coordinatorGroup.GET("/edit-society-modal/:id", controllers.ShowEditSocietyModal)
 	coordinatorGroup.PATCH("/edit-society/:id", controllers.EditSociety)
@@ -21,4 +21,7 @@ func RegisterRoutes(e *echo.Echo) {
 	coordinatorGroup.GET("/create-society", controllers.CreateSociety)
 	coordinatorGroup.PATCH("/enable-society/:id", controllers.EnableSociety)
 	coordinatorGroup.PATCH("/disable-society/:id", controllers.DisableSociety)
+
+	studentGroup := e.Group("/student", middlewares.StudentAuthMiddleware)
+	studentGroup.GET("", controllers.ShowStudentDashboard)
 }
