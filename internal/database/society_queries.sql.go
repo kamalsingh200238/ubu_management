@@ -38,6 +38,79 @@ func (q *Queries) AddSociety(ctx context.Context, arg AddSocietyParams) (Society
 	return i, err
 }
 
+const getAllSocietiesStudentIsEnrolledIn = `-- name: GetAllSocietiesStudentIsEnrolledIn :many
+SELECT
+  s.id, s.name, s.president_id, s.active
+FROM
+  societies AS s
+  JOIN student_societies AS ss ON ss.society_id = s.id
+WHERE
+  ss.student_id = $1
+`
+
+func (q *Queries) GetAllSocietiesStudentIsEnrolledIn(ctx context.Context, studentID int32) ([]Society, error) {
+	rows, err := q.db.Query(ctx, getAllSocietiesStudentIsEnrolledIn, studentID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Society
+	for rows.Next() {
+		var i Society
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.PresidentID,
+			&i.Active,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getAllSocietiesStudentIsNotEnrolledIn = `-- name: GetAllSocietiesStudentIsNotEnrolledIn :many
+SELECT
+  a.id, a.name, a.president_id, a.active
+FROM
+  societies AS a
+  LEFT JOIN student_societies AS ss ON a.id = ss.society_id
+  AND ss.student_id = $1
+WHERE
+  ss.student_id IS NULL
+ORDER BY
+  a.id
+`
+
+func (q *Queries) GetAllSocietiesStudentIsNotEnrolledIn(ctx context.Context, studentID int32) ([]Society, error) {
+	rows, err := q.db.Query(ctx, getAllSocietiesStudentIsNotEnrolledIn, studentID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Society
+	for rows.Next() {
+		var i Society
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.PresidentID,
+			&i.Active,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getAllSocietiesWithPresidentWithStudentCount = `-- name: GetAllSocietiesWithPresidentWithStudentCount :many
 SELECT
   a.id AS society_id,
