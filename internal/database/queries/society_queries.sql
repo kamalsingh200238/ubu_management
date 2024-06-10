@@ -1,3 +1,11 @@
+-- name: AddSociety :one
+INSERT INTO
+  societies (name, active, president_id)
+VALUES
+  ($1, $2, $3)
+RETURNING
+  *;
+
 -- name: UpdateSociety :one
 UPDATE societies
 SET
