@@ -17,6 +17,15 @@ WHERE
 RETURNING
   *;
 
+-- name: SetSocietyActiveStatus :one
+UPDATE societies
+SET
+  active = $1
+WHERE
+  id = $2
+RETURNING
+  *;
+
 -- name: GetAllSocietiesWithPresidentWithStudentCount :many
 SELECT
   a.id AS society_id,
