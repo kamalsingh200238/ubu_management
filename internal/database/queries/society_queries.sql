@@ -68,3 +68,24 @@ WHERE
   so.id = $1
 LIMIT
   1;
+
+-- name: GetAllSocietiesStudentIsEnrolledIn :many
+SELECT
+  s.*
+FROM
+  societies AS s
+  JOIN student_societies AS ss ON ss.society_id = s.id
+WHERE
+  ss.student_id = $1;
+
+-- name: GetAllSocietiesStudentIsNotEnrolledIn :many
+SELECT
+  a.*
+FROM
+  societies AS a
+  LEFT JOIN student_societies AS ss ON a.id = ss.society_id
+  AND ss.student_id = $1
+WHERE
+  ss.student_id IS NULL
+ORDER BY
+  a.id;
