@@ -150,6 +150,33 @@ func (q *Queries) GetSocietyWithPresidentBySocietyId(ctx context.Context, id int
 	return i, err
 }
 
+const setSocietyActiveStatus = `-- name: SetSocietyActiveStatus :one
+UPDATE societies
+SET
+  active = $1
+WHERE
+  id = $2
+RETURNING
+  id, name, president_id, active
+`
+
+type SetSocietyActiveStatusParams struct {
+	Active pgtype.Bool
+	ID     int32
+}
+
+func (q *Queries) SetSocietyActiveStatus(ctx context.Context, arg SetSocietyActiveStatusParams) (Society, error) {
+	row := q.db.QueryRow(ctx, setSocietyActiveStatus, arg.Active, arg.ID)
+	var i Society
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.PresidentID,
+		&i.Active,
+	)
+	return i, err
+}
+
 const updateSociety = `-- name: UpdateSociety :one
 UPDATE societies
 SET
