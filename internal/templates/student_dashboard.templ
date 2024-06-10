@@ -1,7 +1,54 @@
 package templates
 
-templ StudentDashboard() {
+import (
+	"github.com/kamalsingh200238/ubu_management/internal/utils"
+	"github.com/kamalsingh200238/ubu_management/internal/database"
+	"fmt"
+)
+
+type StudentDashboardParams struct {
+	JWTPayload           utils.CustomJwtClaims
+	EnrolledSocieties    []database.Society
+	NotEnrolledSocieties []database.Society
+}
+
+templ StudentDashboard(params StudentDashboardParams) {
 	@BaseLayout(BaseLayoutParams{Title: "Home page"}) {
-		<div>Student Dashboard</div>
+		<main>
+			<div id="activities-grid" class="grid grid-cols-2">
+				<div>
+					<h2>Enrolled Societies</h2>
+					for _, society := range params.EnrolledSocieties {
+						<span>{ fmt.Sprintf("%v", society.ID) }</span>
+						<span>{ society.Name }</span>
+						<span>{ fmt.Sprintf("%v", society.Active.Bool) }</span>
+						<button
+							hx-post={ fmt.Sprintf("/student/leave-activity/%v/%v", params.JWTPayload.PersonID, society.ID) }
+							hx-target="#activities-grid"
+							hx-swap="outerHTML"
+						>
+							Leave
+						</button>
+						<br/>
+					}
+				</div>
+				<div>
+					<h2>Not Enrolled Societies</h2>
+					for _, society := range params.NotEnrolledSocieties {
+						<span>{ fmt.Sprintf("%v", society.ID) }</span>
+						<span>{ society.Name }</span>
+						<span>{ fmt.Sprintf("%v", society.Active.Bool) }</span>
+						<button
+							hx-post={ fmt.Sprintf("/student/leave-activity/%v/%v", params.JWTPayload.PersonID, society.ID) }
+							hx-target="#activities-grid"
+							hx-swap="outerHTML"
+						>
+							Enroll
+						</button>
+						<br/>
+					}
+				</div>
+			</div>
+		</main>
 	}
 }
