@@ -18,4 +18,5 @@ func RegisterRoutes(e *echo.Echo) {
 	coordinatorGroup.GET("/edit-society-modal/:id", controllers.ShowEditSocietyModal)
 	coordinatorGroup.PATCH("/edit-society/:id", controllers.EditSociety)
 	coordinatorGroup.GET("/create-society-modal", controllers.ShowCreateSocietyModal)
+	coordinatorGroup.GET("/create-society", controllers.CreateSociety)
 }
