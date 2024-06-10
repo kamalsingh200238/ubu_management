@@ -11,6 +11,33 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const addSociety = `-- name: AddSociety :one
+INSERT INTO
+  societies (name, active, president_id)
+VALUES
+  ($1, $2, $3)
+RETURNING
+  id, name, president_id, active
+`
+
+type AddSocietyParams struct {
+	Name        string
+	Active      pgtype.Bool
+	PresidentID pgtype.Int4
+}
+
+func (q *Queries) AddSociety(ctx context.Context, arg AddSocietyParams) (Society, error) {
+	row := q.db.QueryRow(ctx, addSociety, arg.Name, arg.Active, arg.PresidentID)
+	var i Society
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.PresidentID,
+		&i.Active,
+	)
+	return i, err
+}
+
 const getAllSocietiesWithPresidentWithStudentCount = `-- name: GetAllSocietiesWithPresidentWithStudentCount :many
 SELECT
   a.id AS society_id,
