@@ -317,3 +317,55 @@ func CreateSociety(c echo.Context) error {
 	})).Write(c.Response().Writer)
 	return utils.Render(c, http.StatusOK, templates.CoordinatorDashboard(societies))
 }
+
+func EnableSociety(c echo.Context) error {
+	params := struct{
+		SocietyID int `param:"id"`
+	}{}
+	err := (&echo.DefaultBinder{}).BindPathParams(c, &params)
+	if err != nil {
+		slog.Error("in getting params from url", err)
+		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
+			Message:  "Internal server error",
+			Closable: true,
+			Variant:  utils.AlertVariantDanger,
+			Duration: 3000,
+		})).Write(c.Response().Writer)
+		return c.NoContent(http.StatusInternalServerError)
+	}
+
+	_, err = database.DBQueries.SetSocietyActiveStatus(context.Background(), database.SetSocietyActiveStatusParams{
+		Active: pgtype.Bool{Bool: true, Valid: true},
+		ID: int32(params.SocietyID),
+	})
+	if err != nil {
+		slog.Error("in setting society active status", err)
+		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
+			Message:  "Internal server error",
+			Closable: true,
+			Variant:  utils.AlertVariantDanger,
+			Duration: 3000,
+		})).Write(c.Response().Writer)
+		return c.NoContent(http.StatusInternalServerError)
+	}
+
+	societies, err := database.DBQueries.GetAllSocietiesWithPresidentWithStudentCount(context.Background())
+	if err != nil {
+		slog.Error("in getting societies", err)
+		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
+			Message:  "Internal server error",
+			Closable: true,
+			Variant:  utils.AlertVariantDanger,
+			Duration: 3000,
+		})).Write(c.Response().Writer)
+		return c.NoContent(http.StatusInternalServerError)
+	}
+
+	htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
+		Message:  "Enabled society successfully",
+		Closable: true,
+		Variant:  utils.AlertVariantSuccess,
+		Duration: 3000,
+	})).Write(c.Response().Writer)
+	return utils.Render(c, http.StatusOK, templates.CoordinatorDashboard(societies))
+}
