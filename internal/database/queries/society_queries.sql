@@ -89,3 +89,19 @@ WHERE
   ss.student_id IS NULL
 ORDER BY
   a.id;
+
+-- name: EnrollStudentInSociety :one
+INSERT INTO
+  student_societies (student_id, society_id)
+VALUES
+  ($1, $2)
+RETURNING
+  *;
+
+-- name: LeaveSociety :one
+DELETE FROM student_societies
+WHERE
+  student_id = $1
+  AND society_id = $2
+RETURNING
+  *;
