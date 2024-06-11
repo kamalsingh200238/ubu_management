@@ -38,6 +38,27 @@ func (q *Queries) AddSociety(ctx context.Context, arg AddSocietyParams) (Society
 	return i, err
 }
 
+const enrollStudentInSociety = `-- name: EnrollStudentInSociety :one
+INSERT INTO
+  student_societies (student_id, society_id)
+VALUES
+  ($1, $2)
+RETURNING
+  student_id, society_id
+`
+
+type EnrollStudentInSocietyParams struct {
+	StudentID int32
+	SocietyID int32
+}
+
+func (q *Queries) EnrollStudentInSociety(ctx context.Context, arg EnrollStudentInSocietyParams) (StudentSociety, error) {
+	row := q.db.QueryRow(ctx, enrollStudentInSociety, arg.StudentID, arg.SocietyID)
+	var i StudentSociety
+	err := row.Scan(&i.StudentID, &i.SocietyID)
+	return i, err
+}
+
 const getAllSocietiesStudentIsEnrolledIn = `-- name: GetAllSocietiesStudentIsEnrolledIn :many
 SELECT
   s.id, s.name, s.president_id, s.active
@@ -220,6 +241,27 @@ func (q *Queries) GetSocietyWithPresidentBySocietyId(ctx context.Context, id int
 		&i.SocietyPresidentID,
 		&i.SocietyActive,
 	)
+	return i, err
+}
+
+const leaveSociety = `-- name: LeaveSociety :one
+DELETE FROM student_societies
+WHERE
+  student_id = $1
+  AND society_id = $2
+RETURNING
+  student_id, society_id
+`
+
+type LeaveSocietyParams struct {
+	StudentID int32
+	SocietyID int32
+}
+
+func (q *Queries) LeaveSociety(ctx context.Context, arg LeaveSocietyParams) (StudentSociety, error) {
+	row := q.db.QueryRow(ctx, leaveSociety, arg.StudentID, arg.SocietyID)
+	var i StudentSociety
+	err := row.Scan(&i.StudentID, &i.SocietyID)
 	return i, err
 }
 
