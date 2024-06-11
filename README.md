@@ -57,7 +57,8 @@ make clean
 - [x] Create function to redirect
 - [x] login page
 - [x] login functionality for coordinator
-- [ ] middleware for routes
+- [x] middleware for routes
+- [ ] authorisation for student routes
 - [ ] Home page redirects the user to either login page or their dashboard
 - [ ] login page redirects the user if they are already logged in and if they have bad token or something then remove the cookies and then let them login
 - [x] Add templ, Create a util to render templ easily
