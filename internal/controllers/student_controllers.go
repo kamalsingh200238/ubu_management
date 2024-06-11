@@ -87,7 +87,7 @@ func EnrollInSociety(c echo.Context) error {
 
 	// get the url params
 	params := struct {
-		StudentID int `param:"studetnID"`
+		StudentID int `param:"studentID"`
 		SoceityID int `param:"societyID"`
 	}{}
 	err = (&echo.DefaultBinder{}).BindPathParams(c, &params)
@@ -200,7 +200,7 @@ func LeaveSociety(c echo.Context) error {
 
 	// get the url params
 	params := struct {
-		StudentID int `param:"studetnID"`
+		StudentID int `param:"studentID"`
 		SoceityID int `param:"societyID"`
 	}{}
 	err = (&echo.DefaultBinder{}).BindPathParams(c, &params)
