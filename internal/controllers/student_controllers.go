@@ -105,7 +105,7 @@ func EnrollInSociety(c echo.Context) error {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 
-	if (jwtPayload.PersonID != params.StudentID) {
+	if jwtPayload.PersonID != params.StudentID {
 		slog.Error(
 			"user does not have authorization to change this resource",
 			"error", err,
@@ -218,7 +218,7 @@ func LeaveSociety(c echo.Context) error {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 
-	if (jwtPayload.PersonID != params.StudentID) {
+	if jwtPayload.PersonID != params.StudentID {
 		slog.Error(
 			"user does not have authorization to change this resource",
 			"error", err,
