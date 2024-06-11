@@ -23,7 +23,7 @@ templ StudentDashboard(params StudentDashboardParams) {
 						<span>{ society.Name }</span>
 						<span>{ fmt.Sprintf("%v", society.Active.Bool) }</span>
 						<button
-							hx-post={ fmt.Sprintf("/student/leave-activity/%v/%v", params.JWTPayload.PersonID, society.ID) }
+							hx-post={ fmt.Sprintf("/student/leave-society/%v/%v", params.JWTPayload.PersonID, society.ID) }
 							hx-target="#activities-grid"
 							hx-swap="outerHTML"
 						>
@@ -39,7 +39,7 @@ templ StudentDashboard(params StudentDashboardParams) {
 						<span>{ society.Name }</span>
 						<span>{ fmt.Sprintf("%v", society.Active.Bool) }</span>
 						<button
-							hx-post={ fmt.Sprintf("/student/leave-activity/%v/%v", params.JWTPayload.PersonID, society.ID) }
+							hx-post={ fmt.Sprintf("/student/enroll-in-society/%v/%v", params.JWTPayload.PersonID, society.ID) }
 							hx-target="#activities-grid"
 							hx-swap="outerHTML"
 						>
