@@ -105,6 +105,20 @@ func EnrollInSociety(c echo.Context) error {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 
+	if (jwtPayload.PersonID != params.StudentID) {
+		slog.Error(
+			"user does not have authorization to change this resource",
+			"error", err,
+		)
+		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
+			Message:  "Not Authorized to change this resource",
+			Closable: true,
+			Variant:  utils.AlertVariantDanger,
+			Duration: 3000,
+		})).Write(c.Response().Writer)
+		return c.NoContent(http.StatusUnauthorized)
+	}
+
 	_, err = database.DBQueries.EnrollStudentInSociety(context.Background(), database.EnrollStudentInSocietyParams{
 		StudentID: int32(jwtPayload.PersonID),
 		SocietyID: int32(params.SoceityID),
@@ -204,13 +218,27 @@ func LeaveSociety(c echo.Context) error {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 
+	if (jwtPayload.PersonID != params.StudentID) {
+		slog.Error(
+			"user does not have authorization to change this resource",
+			"error", err,
+		)
+		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
+			Message:  "Not Authorized to change this resource",
+			Closable: true,
+			Variant:  utils.AlertVariantDanger,
+			Duration: 3000,
+		})).Write(c.Response().Writer)
+		return c.NoContent(http.StatusUnauthorized)
+	}
+
 	_, err = database.DBQueries.LeaveSociety(context.Background(), database.LeaveSocietyParams{
 		StudentID: int32(jwtPayload.PersonID),
 		SocietyID: int32(params.SoceityID),
 	})
 	if err != nil {
 		slog.Error(
-			"in leaving student in a society",
+			"in leaving society",
 			"error", err,
 		)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
