@@ -24,4 +24,6 @@ func RegisterRoutes(e *echo.Echo) {
 
 	studentGroup := e.Group("/student", middlewares.StudentAuthMiddleware)
 	studentGroup.GET("", controllers.ShowStudentDashboard)
+	studentGroup.POST("/enroll-in-society/:studentID/:societyID", controllers.EnrollInSociety)
+	studentGroup.POST("/leave-society/:studentID/:societyID", controllers.LeaveSociety)
 }
