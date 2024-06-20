@@ -198,6 +198,45 @@ func (q *Queries) GetAllSocietiesWithPresidentWithStudentCount(ctx context.Conte
 	return items, nil
 }
 
+const getAllStudentsEnrolledInSocietyOrderByStudentName = `-- name: GetAllStudentsEnrolledInSocietyOrderByStudentName :many
+SELECT
+  s.id AS student_id,
+  s.name AS student_name,
+  ss.society_id AS society_id
+FROM
+  students AS s
+  JOIN student_societies AS ss ON s.id = ss.student_id
+  AND ss.society_id = $1
+ORDER BY
+  s.name
+`
+
+type GetAllStudentsEnrolledInSocietyOrderByStudentNameRow struct {
+	StudentID   int32
+	StudentName string
+	SocietyID   int32
+}
+
+func (q *Queries) GetAllStudentsEnrolledInSocietyOrderByStudentName(ctx context.Context, societyID int32) ([]GetAllStudentsEnrolledInSocietyOrderByStudentNameRow, error) {
+	rows, err := q.db.Query(ctx, getAllStudentsEnrolledInSocietyOrderByStudentName, societyID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetAllStudentsEnrolledInSocietyOrderByStudentNameRow
+	for rows.Next() {
+		var i GetAllStudentsEnrolledInSocietyOrderByStudentNameRow
+		if err := rows.Scan(&i.StudentID, &i.StudentName, &i.SocietyID); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getSocietyWithPresidentBySocietyId = `-- name: GetSocietyWithPresidentBySocietyId :one
 SELECT
   s.id AS president_id,
