@@ -7,48 +7,68 @@ import (
 )
 
 type StudentDashboardParams struct {
-	JWTPayload           utils.CustomJwtClaims
-	EnrolledSocieties    []database.Society
-	NotEnrolledSocieties []database.Society
+	JWTPayload                utils.CustomJwtClaims
+	EnrolledSocieties         []database.Society
+	NotEnrolledSocieties      []database.Society
+	EnrolledStudentsInSociety []database.GetAllStudentsEnrolledInSocietyOrderByStudentNameRow
 }
 
 templ StudentDashboard(params StudentDashboardParams) {
 	@BaseLayout(BaseLayoutParams{Title: "Home page"}) {
-		<main>
-			<div id="activities-grid" class="grid grid-cols-2">
-				<div>
-					<h2>Enrolled Societies</h2>
-					for _, society := range params.EnrolledSocieties {
-						<span>{ fmt.Sprintf("%v", society.ID) }</span>
-						<span>{ society.Name }</span>
-						<span>{ fmt.Sprintf("%v", society.Active.Bool) }</span>
-						<button
-							hx-post={ fmt.Sprintf("/student/leave-society/%v/%v", params.JWTPayload.PersonID, society.ID) }
-							hx-target="#activities-grid"
-							hx-swap="outerHTML"
-						>
-							Leave
-						</button>
-						<br/>
-					}
-				</div>
-				<div>
-					<h2>Not Enrolled Societies</h2>
-					for _, society := range params.NotEnrolledSocieties {
-						<span>{ fmt.Sprintf("%v", society.ID) }</span>
-						<span>{ society.Name }</span>
-						<span>{ fmt.Sprintf("%v", society.Active.Bool) }</span>
-						<button
-							hx-post={ fmt.Sprintf("/student/enroll-in-society/%v/%v", params.JWTPayload.PersonID, society.ID) }
-							hx-target="#activities-grid"
-							hx-swap="outerHTML"
-						>
-							Enroll
-						</button>
-						<br/>
-					}
-				</div>
-			</div>
+		<main id="student-dashboard">
+			<sl-tab-group>
+				<sl-tab slot="nav" panel="student">Student</sl-tab>
+				if params.JWTPayload.Role == utils.PresidentRole {
+					<sl-tab slot="nav" panel="president">President</sl-tab>
+				}
+				<sl-tab-panel name="student">
+					<div id="activities-grid" class="grid grid-cols-2">
+						<div>
+							<h2>Enrolled Societies</h2>
+							for _, society := range params.EnrolledSocieties {
+								<span>{ fmt.Sprintf("%v", society.ID) }</span>
+								<span>{ society.Name }</span>
+								<span>{ fmt.Sprintf("%v", society.Active.Bool) }</span>
+								<button
+									hx-post={ fmt.Sprintf("/student/leave-society/%v/%v", params.JWTPayload.PersonID, society.ID) }
+									hx-target="#student-dashboard"
+									hx-swap="outerHTML"
+								>
+									Leave
+								</button>
+								<br/>
+							}
+						</div>
+						<div>
+							<h2>Not Enrolled Societies</h2>
+							for _, society := range params.NotEnrolledSocieties {
+								<span>{ fmt.Sprintf("%v", society.ID) }</span>
+								<span>{ society.Name }</span>
+								<span>{ fmt.Sprintf("%v", society.Active.Bool) }</span>
+								<button
+									hx-post={ fmt.Sprintf("/student/enroll-in-society/%v/%v", params.JWTPayload.PersonID, society.ID) }
+									hx-target="#student-dashboard"
+									hx-swap="outerHTML"
+								>
+									Enroll
+								</button>
+								<br/>
+							}
+						</div>
+					</div>
+				</sl-tab-panel>
+				if params.JWTPayload.Role == utils.PresidentRole {
+					<sl-tab-panel name="president">
+						for _, student := range params.EnrolledStudentsInSociety {
+							<div>
+								<span>{ student.StudentName }</span>
+								<span>{ fmt.Sprintf("%v", student.StudentID) }</span>
+								<span>{ fmt.Sprintf("%v", student.SocietyID) }</span>
+							</div>
+						}
+					</sl-tab-panel>
+				}
+			</sl-tab-group>
 		</main>
 	}
 }

@@ -8,6 +8,7 @@ import (
 
 	"github.com/angelofallars/htmx-go"
 	"github.com/kamalsingh200238/ubu_management/internal/database"
+	"github.com/kamalsingh200238/ubu_management/internal/middlewares"
 	"github.com/kamalsingh200238/ubu_management/internal/templates"
 	"github.com/kamalsingh200238/ubu_management/internal/utils"
 	"github.com/labstack/echo/v4"
@@ -30,6 +31,42 @@ func ShowStudentDashboard(c echo.Context) error {
 		})).Write(c.Response().Writer)
 		return c.NoContent(http.StatusInternalServerError)
 	}
+
+	students := []database.GetAllStudentsEnrolledInSocietyOrderByStudentNameRow{}
+	if jwtPayload.Role == utils.PresidentRole {
+		presidentInfoString := c.Get("presidentInfo").([]byte)
+		presidentInfo := middlewares.PresidentInfo{}
+		err = json.Unmarshal(presidentInfoString, &presidentInfo)
+		if err != nil {
+			slog.Error(
+				"in unmarshal of json of president info",
+				"error", err,
+			)
+			htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
+				Message:  "Internal server error",
+				Closable: true,
+				Variant:  utils.AlertVariantDanger,
+				Duration: 3000,
+			})).Write(c.Response().Writer)
+			return c.NoContent(http.StatusInternalServerError)
+		}
+
+		students, err = database.DBQueries.GetAllStudentsEnrolledInSocietyOrderByStudentName(context.Background(), int32(presidentInfo.SocietyID))
+		if err != nil {
+			slog.Error(
+				"in getting students enrolled in society",
+				"error", err,
+			)
+			htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
+				Message:  "Internal server error",
+				Closable: true,
+				Variant:  utils.AlertVariantDanger,
+				Duration: 3000,
+			})).Write(c.Response().Writer)
+			return c.NoContent(http.StatusInternalServerError)
+		}
+	}
+
 	enrolledInSocieties, err := database.DBQueries.GetAllSocietiesStudentIsEnrolledIn(context.Background(), int32(jwtPayload.PersonID))
 	if err != nil {
 		slog.Error(
@@ -61,9 +98,10 @@ func ShowStudentDashboard(c echo.Context) error {
 	}
 
 	return utils.Render(c, http.StatusOK, templates.StudentDashboard(templates.StudentDashboardParams{
-		JWTPayload:           jwtPayload,
-		EnrolledSocieties:    enrolledInSocieties,
-		NotEnrolledSocieties: notEnrolledSocieties,
+		JWTPayload:                jwtPayload,
+		EnrolledSocieties:         enrolledInSocieties,
+		NotEnrolledSocieties:      notEnrolledSocieties,
+		EnrolledStudentsInSociety: students,
 	}))
 }
 
@@ -137,6 +175,41 @@ func EnrollInSociety(c echo.Context) error {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 
+	students := []database.GetAllStudentsEnrolledInSocietyOrderByStudentNameRow{}
+	if jwtPayload.Role == utils.PresidentRole {
+		presidentInfoString := c.Get("presidentInfo").([]byte)
+		presidentInfo := middlewares.PresidentInfo{}
+		err = json.Unmarshal(presidentInfoString, &presidentInfo)
+		if err != nil {
+			slog.Error(
+				"in unmarshal of json of president info",
+				"error", err,
+			)
+			htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
+				Message:  "Internal server error",
+				Closable: true,
+				Variant:  utils.AlertVariantDanger,
+				Duration: 3000,
+			})).Write(c.Response().Writer)
+			return c.NoContent(http.StatusInternalServerError)
+		}
+
+		students, err = database.DBQueries.GetAllStudentsEnrolledInSocietyOrderByStudentName(context.Background(), int32(presidentInfo.SocietyID))
+		if err != nil {
+			slog.Error(
+				"in getting students enrolled in society",
+				"error", err,
+			)
+			htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
+				Message:  "Internal server error",
+				Closable: true,
+				Variant:  utils.AlertVariantDanger,
+				Duration: 3000,
+			})).Write(c.Response().Writer)
+			return c.NoContent(http.StatusInternalServerError)
+		}
+	}
+
 	enrolledInSocieties, err := database.DBQueries.GetAllSocietiesStudentIsEnrolledIn(context.Background(), int32(jwtPayload.PersonID))
 	if err != nil {
 		slog.Error(
@@ -174,9 +247,10 @@ func EnrollInSociety(c echo.Context) error {
 		Duration: 3000,
 	})).Write(c.Response().Writer)
 	return utils.Render(c, http.StatusOK, templates.StudentDashboard(templates.StudentDashboardParams{
-		JWTPayload:           jwtPayload,
-		EnrolledSocieties:    enrolledInSocieties,
-		NotEnrolledSocieties: notEnrolledSocieties,
+		JWTPayload:                jwtPayload,
+		EnrolledSocieties:         enrolledInSocieties,
+		NotEnrolledSocieties:      notEnrolledSocieties,
+		EnrolledStudentsInSociety: students,
 	}))
 }
 
@@ -250,6 +324,41 @@ func LeaveSociety(c echo.Context) error {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 
+	students := []database.GetAllStudentsEnrolledInSocietyOrderByStudentNameRow{}
+	if jwtPayload.Role == utils.PresidentRole {
+		presidentInfoString := c.Get("presidentInfo").([]byte)
+		presidentInfo := middlewares.PresidentInfo{}
+		err = json.Unmarshal(presidentInfoString, &presidentInfo)
+		if err != nil {
+			slog.Error(
+				"in unmarshal of json of president info",
+				"error", err,
+			)
+			htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
+				Message:  "Internal server error",
+				Closable: true,
+				Variant:  utils.AlertVariantDanger,
+				Duration: 3000,
+			})).Write(c.Response().Writer)
+			return c.NoContent(http.StatusInternalServerError)
+		}
+
+		students, err = database.DBQueries.GetAllStudentsEnrolledInSocietyOrderByStudentName(context.Background(), int32(presidentInfo.SocietyID))
+		if err != nil {
+			slog.Error(
+				"in getting students enrolled in society",
+				"error", err,
+			)
+			htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
+				Message:  "Internal server error",
+				Closable: true,
+				Variant:  utils.AlertVariantDanger,
+				Duration: 3000,
+			})).Write(c.Response().Writer)
+			return c.NoContent(http.StatusInternalServerError)
+		}
+	}
+
 	enrolledInSocieties, err := database.DBQueries.GetAllSocietiesStudentIsEnrolledIn(context.Background(), int32(jwtPayload.PersonID))
 	if err != nil {
 		slog.Error(
@@ -287,8 +396,9 @@ func LeaveSociety(c echo.Context) error {
 		Duration: 3000,
 	})).Write(c.Response().Writer)
 	return utils.Render(c, http.StatusOK, templates.StudentDashboard(templates.StudentDashboardParams{
-		JWTPayload:           jwtPayload,
-		EnrolledSocieties:    enrolledInSocieties,
-		NotEnrolledSocieties: notEnrolledSocieties,
+		JWTPayload:                jwtPayload,
+		EnrolledSocieties:         enrolledInSocieties,
+		NotEnrolledSocieties:      notEnrolledSocieties,
+		EnrolledStudentsInSociety: students,
 	}))
 }
