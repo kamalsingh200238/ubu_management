@@ -40,6 +40,11 @@ clean:
 	@echo "Cleaning..."
 	@rm -f main
 
+format:
+	@echo "Formating..."
+	@npx rustywind --write .
+	@npx prettier -w .
+
 # Live Reload
 watch:
 	@if command -v air > /dev/null; then \
