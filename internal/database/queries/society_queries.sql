@@ -90,6 +90,18 @@ WHERE
 ORDER BY
   a.id;
 
+-- name: GetAllStudentsEnrolledInSocietyOrderByStudentName :many
+SELECT
+  s.id AS student_id,
+  s.name AS student_name,
+  ss.society_id AS society_id
+FROM
+  students AS s
+  JOIN student_societies AS ss ON s.id = ss.student_id
+  AND ss.society_id = $1
+ORDER BY
+  s.name;
+
 -- name: EnrollStudentInSociety :one
 INSERT INTO
   student_societies (student_id, society_id)
