@@ -15,36 +15,43 @@ type StudentDashboardParams struct {
 
 templ StudentDashboard(params StudentDashboardParams) {
 	@BaseLayout(BaseLayoutParams{Title: "Home page"}) {
-		<main id="student-dashboard" class="max-w-7xl mx-auto">
+		<main id="student-dashboard" class="mx-auto max-w-7xl">
 			<sl-tab-group>
 				<sl-tab slot="nav" panel="student">Student</sl-tab>
 				if params.JWTPayload.Role == utils.PresidentRole {
 					<sl-tab slot="nav" panel="president">President</sl-tab>
 				}
 				<sl-tab-panel name="student">
-					<div id="activities-grid" class="grid grid-cols-2 px-10 mt-8 gap-10">
+					<div id="activities-grid" class="grid grid-cols-2 gap-10 px-10 mt-8">
 						<div>
-							<h2 class="text-center py-2 border border-green-300 bg-green-100 font-bold text-green-950">Enrolled Societies</h2>
+							<h2 class="py-2 font-bold text-center bg-green-100 border border-green-300 text-green-950">Enrolled Societies</h2>
 							<table class="mx-auto mt-4">
 								<thead>
 									<tr>
-										<th class="px-5 py-2 border border-zinc-300 bg-zinc-100">Society Name</th>
-										<th class="px-5 py-2 border border-zinc-300 bg-zinc-100">Society Active Status</th>
-										<th class="px-5 py-2 border border-zinc-300 bg-zinc-100">Society Action</th>
+										<th class="py-2 px-5 border border-zinc-300 bg-zinc-100">Society Name</th>
+										<th class="py-2 px-5 border border-zinc-300 bg-zinc-100">Society Active Status</th>
+										<th class="py-2 px-5 border border-zinc-300 bg-zinc-100">Society Action</th>
 									</tr>
 								</thead>
 								<tbody>
 									for _, society := range params.EnrolledSocieties {
 										<tr class="odd:bg-zinc-50">
-											<td class="border border-zinc-200 px-5 py-2">{ society.Name }</td>
-											<td class="border border-zinc-200 px-5 py-2">{ fmt.Sprintf("%v", society.Active.Bool) }</td>
-											<td class="border border-zinc-200 px-5 py-2">
+											<td class="py-2 px-5 border border-zinc-200">{ society.Name }</td>
+											<td class="py-2 px-5 border border-zinc-200">
+												<span
+													class={ "px-3 py-1 rounded-md border" , templ.KV("bg-green-100 text-green-950 border-green-300", society.Active.Bool), templ.KV("bg-red-100 border-red-300 text-red-950", !society.Active.Bool) }
+												>
+													{ fmt.Sprintf("%v", society.Active.Bool) }
+												</span>
+											</td>
+											<td class="py-2 px-5 border border-zinc-200">
 												<sl-button
 													hx-post={ fmt.Sprintf("/student/leave-society/%v/%v", params.JWTPayload.PersonID, society.ID) }
 													hx-target="#student-dashboard"
 													hx-swap="outerHTML"
 													variant="danger"
 													class="w-full"
+													disabled?={ !society.Active.Bool }
 													outline
 												>
 													Leave
@@ -56,27 +63,34 @@ templ StudentDashboard(params StudentDashboardParams) {
 							</table>
 						</div>
 						<div>
-							<h2 class="text-center py-2 border border-red-300 bg-red-100 font-bold text-red-950">Not Enrolled Societies</h2>
+							<h2 class="py-2 font-bold text-center bg-red-100 border border-red-300 text-red-950">Not Enrolled Societies</h2>
 							<table class="mx-auto mt-4">
 								<thead>
 									<tr>
-										<th class="px-5 py-2 border border-zinc-300 bg-zinc-100">Society Name</th>
-										<th class="px-5 py-2 border border-zinc-300 bg-zinc-100">Society Active Status</th>
-										<th class="px-5 py-2 border border-zinc-300 bg-zinc-100">Society Action</th>
+										<th class="py-2 px-5 border border-zinc-300 bg-zinc-100">Society Name</th>
+										<th class="py-2 px-5 border border-zinc-300 bg-zinc-100">Society Active Status</th>
+										<th class="py-2 px-5 border border-zinc-300 bg-zinc-100">Society Action</th>
 									</tr>
 								</thead>
 								<tbody>
 									for _, society := range params.NotEnrolledSocieties {
 										<tr class="odd:bg-zinc-50">
-											<td class="border border-zinc-200 px-5 py-2">{ society.Name }</td>
-											<td class="border border-zinc-200 px-5 py-2">{ fmt.Sprintf("%v", society.Active.Bool) }</td>
-											<td class="border border-zinc-200 px-5 py-2">
+											<td class="py-2 px-5 border border-zinc-200">{ society.Name }</td>
+											<td class="py-2 px-5 border border-zinc-200">
+												<span
+													class={ "px-3 py-1 rounded-md border" , templ.KV("bg-green-100 text-green-950 border-green-300", society.Active.Bool), templ.KV("bg-red-100 border-red-300 text-red-950", !society.Active.Bool) }
+												>
+													{ fmt.Sprintf("%v", society.Active.Bool) }
+												</span>
+											</td>
+											<td class="py-2 px-5 border border-zinc-200">
 												<sl-button
-									hx-post={ fmt.Sprintf("/student/enroll-in-society/%v/%v", params.JWTPayload.PersonID, society.ID) }
+													hx-post={ fmt.Sprintf("/student/enroll-in-society/%v/%v", params.JWTPayload.PersonID, society.ID) }
 													hx-target="#student-dashboard"
 													hx-swap="outerHTML"
 													variant="success"
 													class="w-full"
+													disabled?={ !society.Active.Bool }
 													outline
 												>
 													Enroll
@@ -91,13 +105,27 @@ templ StudentDashboard(params StudentDashboardParams) {
 				</sl-tab-panel>
 				if params.JWTPayload.Role == utils.PresidentRole {
 					<sl-tab-panel name="president">
-						for _, student := range params.EnrolledStudentsInSociety {
-							<div>
-								<span>{ student.StudentName }</span>
-								<span>{ fmt.Sprintf("%v", student.StudentID) }</span>
-								<span>{ fmt.Sprintf("%v", student.SocietyID) }</span>
-							</div>
-						}
+						<div class="mt-8">
+							<h2 class="py-2 font-bold text-center bg-sky-100 border border-sky-300 text-sky-950 inline-block px-10">Enrolled Students in Society</h2>
+							<table class="mt-4">
+								<thead>
+									<tr>
+										<th class="py-2 px-5 border border-zinc-300 bg-zinc-100">Student Name</th>
+										<th class="py-2 px-5 border border-zinc-300 bg-zinc-100">Student ID</th>
+										<th class="py-2 px-5 border border-zinc-300 bg-zinc-100">Society ID</th>
+									</tr>
+								</thead>
+								<tbody>
+									for _, student := range params.EnrolledStudentsInSociety {
+										<tr class="odd:bg-zinc-50">
+											<td class="py-2 px-5 border border-zinc-200">{ student.StudentName }</td>
+											<td class="py-2 px-5 border border-zinc-200">{ fmt.Sprintf("%v", student.StudentID) }</td>
+											<td class="py-2 px-5 border border-zinc-200">{ fmt.Sprintf("%v", student.SocietyID) }</td>
+										</tr>
+									}
+								</tbody>
+							</table>
+						</div>
 					</sl-tab-panel>
 				}
 			</sl-tab-group>
