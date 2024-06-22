@@ -22,36 +22,70 @@ templ StudentDashboard(params StudentDashboardParams) {
 					<sl-tab slot="nav" panel="president">President</sl-tab>
 				}
 				<sl-tab-panel name="student">
-					<div id="activities-grid" class="grid grid-cols-2 px-10 mt-8">
+					<div id="activities-grid" class="grid grid-cols-2 px-10 mt-8 gap-10">
 						<div>
-							<h2 class="text-center py-2 border border-zinc-300 bg-zinc-200 font-bold text-zinc-950">Enrolled Societies</h2>
-							for _, society := range params.EnrolledSocieties {
-								<span>{ society.Name }</span>
-								<span>{ fmt.Sprintf("%v", society.Active.Bool) }</span>
-								<button
-									hx-post={ fmt.Sprintf("/student/leave-society/%v/%v", params.JWTPayload.PersonID, society.ID) }
-									hx-target="#student-dashboard"
-									hx-swap="outerHTML"
-								>
-									Leave
-								</button>
-								<br/>
-							}
+							<h2 class="text-center py-2 border border-green-300 bg-green-100 font-bold text-green-950">Enrolled Societies</h2>
+							<table class="mx-auto mt-4">
+								<thead>
+									<tr>
+										<th class="px-5 py-2 border border-zinc-300 bg-zinc-100">Society Name</th>
+										<th class="px-5 py-2 border border-zinc-300 bg-zinc-100">Society Active Status</th>
+										<th class="px-5 py-2 border border-zinc-300 bg-zinc-100">Society Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									for _, society := range params.EnrolledSocieties {
+										<tr class="odd:bg-zinc-50">
+											<td class="border border-zinc-200 px-5 py-2">{ society.Name }</td>
+											<td class="border border-zinc-200 px-5 py-2">{ fmt.Sprintf("%v", society.Active.Bool) }</td>
+											<td class="border border-zinc-200 px-5 py-2">
+												<sl-button
+													hx-post={ fmt.Sprintf("/student/leave-society/%v/%v", params.JWTPayload.PersonID, society.ID) }
+													hx-target="#student-dashboard"
+													hx-swap="outerHTML"
+													variant="danger"
+													class="w-full"
+													outline
+												>
+													Leave
+												</sl-button>
+											</td>
+										</tr>
+									}
+								</tbody>
+							</table>
 						</div>
 						<div>
-							<h2 class="text-center py-2 border border-zinc-300 bg-zinc-200 font-bold text-zinc-950">Not Enrolled Societies</h2>
-							for _, society := range params.NotEnrolledSocieties {
-								<span>{ society.Name }</span>
-								<span>{ fmt.Sprintf("%v", society.Active.Bool) }</span>
-								<button
+							<h2 class="text-center py-2 border border-red-300 bg-red-100 font-bold text-red-950">Not Enrolled Societies</h2>
+							<table class="mx-auto mt-4">
+								<thead>
+									<tr>
+										<th class="px-5 py-2 border border-zinc-300 bg-zinc-100">Society Name</th>
+										<th class="px-5 py-2 border border-zinc-300 bg-zinc-100">Society Active Status</th>
+										<th class="px-5 py-2 border border-zinc-300 bg-zinc-100">Society Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									for _, society := range params.NotEnrolledSocieties {
+										<tr class="odd:bg-zinc-50">
+											<td class="border border-zinc-200 px-5 py-2">{ society.Name }</td>
+											<td class="border border-zinc-200 px-5 py-2">{ fmt.Sprintf("%v", society.Active.Bool) }</td>
+											<td class="border border-zinc-200 px-5 py-2">
+												<sl-button
 									hx-post={ fmt.Sprintf("/student/enroll-in-society/%v/%v", params.JWTPayload.PersonID, society.ID) }
-									hx-target="#student-dashboard"
-									hx-swap="outerHTML"
-								>
-									Enroll
-								</button>
-								<br/>
-							}
+													hx-target="#student-dashboard"
+													hx-swap="outerHTML"
+													variant="success"
+													class="w-full"
+													outline
+												>
+													Enroll
+												</sl-button>
+											</td>
+										</tr>
+									}
+								</tbody>
+							</table>
 						</div>
 					</div>
 				</sl-tab-panel>
