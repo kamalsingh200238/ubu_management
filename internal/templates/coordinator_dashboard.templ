@@ -5,19 +5,19 @@ import "fmt"
 
 templ CoordinatorDashboard(socities []database.GetAllSocietiesWithPresidentWithStudentCountRow) {
 	@BaseLayout(BaseLayoutParams{Title: "Home page"}) {
-	<header class="shadow-lg">
-		<div class="flex justify-between items-center h-20 px-14 max-w-7xl mx-auto">
-			<h1 class="font-bold">Dashboard</h1>
-			<sl-button
-				variant="primary"
-				hx-get="/coordinator/create-society-modal"
-				hx-target="#modal-wrapper"
-				hx-swap="innerHTML"
-			>
-				Create Society
-			</sl-button>
-		</div>
-	</header>
+		<header class="shadow-lg">
+			<div class="flex justify-between items-center px-14 mx-auto max-w-7xl h-20">
+				<h1 class="font-bold">Dashboard</h1>
+				<sl-button
+					variant="primary"
+					hx-get="/coordinator/create-society-modal"
+					hx-target="#modal-wrapper"
+					hx-swap="innerHTML"
+				>
+					Create Society
+				</sl-button>
+			</div>
+		</header>
 		<main class="px-10 mx-auto max-w-7xl">
 			<table
 				id="coordinator-table"
@@ -25,29 +25,29 @@ templ CoordinatorDashboard(socities []database.GetAllSocietiesWithPresidentWithS
 			>
 				<thead class="text-left">
 					<tr>
-						<th class="border border-zinc-300 px-5 py-2">Society Name</th>
-						<th class="border border-zinc-300 px-5 py-2">Society Active</th>
-						<th class="border border-zinc-300 px-5 py-2">President Name</th>
-						<th class="border border-zinc-300 px-5 py-2">Enrolled students</th>
-						<th class="border border-zinc-300 px-5 py-2">Society Action</th>
-						<th class="border border-zinc-300 px-5 py-2">Edit Society</th>
+						<th class="py-2 px-5 border border-zinc-300">Society Name</th>
+						<th class="py-2 px-5 border border-zinc-300">Society Active</th>
+						<th class="py-2 px-5 border border-zinc-300">President Name</th>
+						<th class="py-2 px-5 border border-zinc-300">Enrolled students</th>
+						<th class="py-2 px-5 border border-zinc-300">Society Action</th>
+						<th class="py-2 px-5 border border-zinc-300">Edit Society</th>
 					</tr>
 				</thead>
 				<tbody>
 					for _, s := range socities {
 						<tr class="odd:bg-zinc-50">
-							<td class="px-5 py-2 border border-zinc-200">{ s.SocietyName }</td>
-							<td class="px-5 py-2 border border-zinc-200">
+							<td class="py-2 px-5 border border-zinc-200">{ s.SocietyName }</td>
+							<td class="py-2 px-5 border border-zinc-200">
 								<span
-									class={ "px-3 py-1 rounded-md" , templ.KV("bg-green-300 text-green-950", s.SocietyActive.Bool), templ.KV("bg-red-300 text-red-950", !s.SocietyActive.Bool) }
+									class={ "px-3 py-1 rounded-md" , templ.KV("bg-green-100 border-green-300 text-green-950", s.SocietyActive.Bool), templ.KV("bg-red-100 border-red-300 text-red-950", !s.SocietyActive.Bool) }
 								>
 									{ fmt.Sprintf("%v", s.SocietyActive.Bool) }
 								</span>
 							</td>
-							<td class="px-5 py-2 border border-zinc-200">{ s.PresidentName.String }</td>
-							<td class="px-5 py-2 border border-zinc-200">{ fmt.Sprintf("%v", s.EnrolledStudentCount) }</td>
+							<td class="py-2 px-5 border border-zinc-200">{ s.PresidentName.String }</td>
+							<td class="py-2 px-5 border border-zinc-200">{ fmt.Sprintf("%v", s.EnrolledStudentCount) }</td>
 							if s.SocietyActive.Bool {
-								<td class="px-5 py-2 border border-zinc-200">
+								<td class="py-2 px-5 border border-zinc-200">
 									<sl-button
 										hx-patch={ fmt.Sprintf("/coordinator/disable-society/%v", s.SocietyID) }
 										hx-target="#coordinator-table"
@@ -63,7 +63,7 @@ templ CoordinatorDashboard(socities []database.GetAllSocietiesWithPresidentWithS
 									</sl-button>
 								</td>
 							} else {
-								<td class="px-5 py-2 border border-zinc-200">
+								<td class="py-2 px-5 border border-zinc-200">
 									<sl-button
 										hx-patch={ fmt.Sprintf("/coordinator/enable-society/%v", s.SocietyID) }
 										hx-swap="outerHTML"
@@ -79,7 +79,7 @@ templ CoordinatorDashboard(socities []database.GetAllSocietiesWithPresidentWithS
 									</sl-button>
 								</td>
 							}
-							<td class="px-5 py-2 border border-zinc-200">
+							<td class="py-2 px-5 border border-zinc-200">
 								<sl-button
 									hx-get={ fmt.Sprintf("/coordinator/edit-society-modal/%v", s.SocietyID) }
 									hx-swap="innerHTML"
