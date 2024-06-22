@@ -96,6 +96,7 @@ func CooridnatorLogin(c echo.Context) error {
 		},
 		Role:     utils.Coordinator,
 		Email:    coordinator.Email,
+		Name:     coordinator.Name,
 		PersonID: int(coordinator.ID),
 	}
 
@@ -215,6 +216,7 @@ func StudentLogin(c echo.Context) error {
 			IssuedAt:  &jwt.NumericDate{Time: time.Now()},
 		},
 		Role:     role,
+		Name:     student.Name,
 		Email:    student.Email,
 		PersonID: int(student.ID),
 	}
