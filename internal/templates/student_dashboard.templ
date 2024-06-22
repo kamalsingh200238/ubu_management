@@ -15,18 +15,17 @@ type StudentDashboardParams struct {
 
 templ StudentDashboard(params StudentDashboardParams) {
 	@BaseLayout(BaseLayoutParams{Title: "Home page"}) {
-		<main id="student-dashboard">
+		<main id="student-dashboard" class="max-w-7xl mx-auto">
 			<sl-tab-group>
 				<sl-tab slot="nav" panel="student">Student</sl-tab>
 				if params.JWTPayload.Role == utils.PresidentRole {
 					<sl-tab slot="nav" panel="president">President</sl-tab>
 				}
 				<sl-tab-panel name="student">
-					<div id="activities-grid" class="grid grid-cols-2">
+					<div id="activities-grid" class="grid grid-cols-2 px-10 mt-8">
 						<div>
-							<h2>Enrolled Societies</h2>
+							<h2 class="text-center py-2 border border-zinc-300 bg-zinc-200 font-bold text-zinc-950">Enrolled Societies</h2>
 							for _, society := range params.EnrolledSocieties {
-								<span>{ fmt.Sprintf("%v", society.ID) }</span>
 								<span>{ society.Name }</span>
 								<span>{ fmt.Sprintf("%v", society.Active.Bool) }</span>
 								<button
@@ -40,9 +39,8 @@ templ StudentDashboard(params StudentDashboardParams) {
 							}
 						</div>
 						<div>
-							<h2>Not Enrolled Societies</h2>
+							<h2 class="text-center py-2 border border-zinc-300 bg-zinc-200 font-bold text-zinc-950">Not Enrolled Societies</h2>
 							for _, society := range params.NotEnrolledSocieties {
-								<span>{ fmt.Sprintf("%v", society.ID) }</span>
 								<span>{ society.Name }</span>
 								<span>{ fmt.Sprintf("%v", society.Active.Bool) }</span>
 								<button
