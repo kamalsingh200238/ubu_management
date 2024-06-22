@@ -19,26 +19,26 @@ templ CoordinatorDashboard(socities []database.GetAllSocietiesWithPresidentWithS
 			</div>
 			<table
 				id="coordinator-table"
-				hx-on::afterSwap="console.log('swap from table itself')"
+				class="px-5 mx-auto"
 			>
-				<thead>
+				<thead class="text-left">
 					<tr class="bg-zinc-100">
-						<th class="border border-zinc-300">Society Name</th>
-						<th class="border border-zinc-300">Society Active</th>
-						<th class="border border-zinc-300">President Name</th>
-						<th class="border border-zinc-300">Society Action</th>
-						<th class="border border-zinc-300">Edit Society</th>
-						<th class="border border-zinc-300">Enrolled students</th>
+						<th class="border border-zinc-300 px-5 py-2">Society Name</th>
+						<th class="border border-zinc-300 px-5 py-2">Society Active</th>
+						<th class="border border-zinc-300 px-5 py-2">President Name</th>
+						<th class="border border-zinc-300 px-5 py-2">Society Action</th>
+						<th class="border border-zinc-300 px-5 py-2">Edit Society</th>
+						<th class="border border-zinc-300 px-5 py-2">Enrolled students</th>
 					</tr>
 				</thead>
 				for _, s := range socities {
 					<tbody>
 						<tr>
-							<td>{ s.SocietyName }</td>
-							<td>{ fmt.Sprintf("%v", s.SocietyActive.Bool) }</td>
-							<td>{ s.PresidentName.String }</td>
+							<td class="px-5 py-2">{ s.SocietyName }</td>
+							<td class="px-5 py-2">{ fmt.Sprintf("%v", s.SocietyActive.Bool) }</td>
+							<td class="px-5 py-2">{ s.PresidentName.String }</td>
 							if s.SocietyActive.Bool {
-								<td>
+								<td class="px-5 py-2">
 									<button
 										hx-patch={ fmt.Sprintf("/coordinator/disable-society/%v", s.SocietyID) }
 										hx-target="#coordinator-table"
@@ -50,7 +50,7 @@ templ CoordinatorDashboard(socities []database.GetAllSocietiesWithPresidentWithS
 									</button>
 								</td>
 							} else {
-								<td>
+								<td class="px-5 py-2">
 									<button
 										hx-patch={ fmt.Sprintf("/coordinator/enable-society/%v", s.SocietyID) }
 										hx-swap="outerHTML"
@@ -62,7 +62,7 @@ templ CoordinatorDashboard(socities []database.GetAllSocietiesWithPresidentWithS
 									</button>
 								</td>
 							}
-							<td>
+							<td class="px-5 py-2">
 								<button
 									hx-get={ fmt.Sprintf("/coordinator/edit-society-modal/%v", s.SocietyID) }
 									hx-swap="innerHTML"
@@ -71,7 +71,7 @@ templ CoordinatorDashboard(socities []database.GetAllSocietiesWithPresidentWithS
 									Edit
 								</button>
 							</td>
-							<td>{ fmt.Sprintf("%v", s.EnrolledStudentCount) }</td>
+							<td class="px-5 py-2">{ fmt.Sprintf("%v", s.EnrolledStudentCount) }</td>
 						</tr>
 					</tbody>
 				}
