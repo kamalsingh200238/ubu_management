@@ -26,51 +26,69 @@ templ CoordinatorDashboard(socities []database.GetAllSocietiesWithPresidentWithS
 						<th class="border border-zinc-300 px-5 py-2">Society Name</th>
 						<th class="border border-zinc-300 px-5 py-2">Society Active</th>
 						<th class="border border-zinc-300 px-5 py-2">President Name</th>
+						<th class="border border-zinc-300 px-5 py-2">Enrolled students</th>
 						<th class="border border-zinc-300 px-5 py-2">Society Action</th>
 						<th class="border border-zinc-300 px-5 py-2">Edit Society</th>
-						<th class="border border-zinc-300 px-5 py-2">Enrolled students</th>
 					</tr>
 				</thead>
 				<tbody>
 					for _, s := range socities {
 						<tr class="odd:bg-zinc-50">
 							<td class="px-5 py-2 border border-zinc-200">{ s.SocietyName }</td>
-							<td class="px-5 py-2 border border-zinc-200">{ fmt.Sprintf("%v", s.SocietyActive.Bool) }</td>
+							<td class="px-5 py-2 border border-zinc-200">
+								<span
+									class={ "px-3 py-1 rounded-md" , templ.KV("bg-green-300 text-green-950", s.SocietyActive.Bool), templ.KV("bg-red-300 text-red-950", !s.SocietyActive.Bool) }
+								>
+									{ fmt.Sprintf("%v", s.SocietyActive.Bool) }
+								</span>
+							</td>
 							<td class="px-5 py-2 border border-zinc-200">{ s.PresidentName.String }</td>
 							<td class="px-5 py-2 border border-zinc-200">{ fmt.Sprintf("%v", s.EnrolledStudentCount) }</td>
 							if s.SocietyActive.Bool {
 								<td class="px-5 py-2 border border-zinc-200">
-									<button
+									<sl-button
 										hx-patch={ fmt.Sprintf("/coordinator/disable-society/%v", s.SocietyID) }
 										hx-target="#coordinator-table"
 										hx-select="#coordinator-table"
 										hx-confirm={ fmt.Sprintf("Are you sure you want to disable %v?", s.SocietyName) }
 										hx-swap="outerHTML"
+										variant="neutral"
+										size="small"
+										class="w-full"
+										outline
 									>
 										Disable
-									</button>
+									</sl-button>
 								</td>
 							} else {
 								<td class="px-5 py-2 border border-zinc-200">
-									<button
+									<sl-button
 										hx-patch={ fmt.Sprintf("/coordinator/enable-society/%v", s.SocietyID) }
 										hx-swap="outerHTML"
 										hx-target="#coordinator-table"
 										hx-select="#coordinator-table"
 										hx-confirm={ fmt.Sprintf("Are you sure you want to enable %v?", s.SocietyName) }
+										variant="neutral"
+										size="small"
+										outline
+										class="w-full"
 									>
 										Enable
-									</button>
+									</sl-button>
 								</td>
 							}
 							<td class="px-5 py-2 border border-zinc-200">
-								<button
+								<sl-button
 									hx-get={ fmt.Sprintf("/coordinator/edit-society-modal/%v", s.SocietyID) }
 									hx-swap="innerHTML"
 									hx-target="#modal-wrapper"
+									variant="neutral"
+									size="small"
+									class="w-full"
+									outline
 								>
 									Edit
-								</button>
+								</sl-button>
 							</td>
 						</tr>
 					}
