@@ -37,7 +37,7 @@ func ShowEditSocietyModal(c echo.Context) error {
 	if err != nil {
 		slog.Error("error in reading params", err)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -49,7 +49,7 @@ func ShowEditSocietyModal(c echo.Context) error {
 	if err != nil {
 		slog.Error("error in getting society from db", err)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -76,7 +76,7 @@ func EditSociety(c echo.Context) error {
 	if err != nil {
 		slog.Error("in getting params", err)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -94,7 +94,7 @@ func EditSociety(c echo.Context) error {
 	if err != nil {
 		slog.Error("in getting form values", err)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -131,7 +131,7 @@ func EditSociety(c echo.Context) error {
 	if err != nil {
 		slog.Error("in getting student", err)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -161,7 +161,7 @@ func EditSociety(c echo.Context) error {
 	if err != nil {
 		slog.Error("in updating society", err)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -173,7 +173,7 @@ func EditSociety(c echo.Context) error {
 	if err != nil {
 		slog.Error("in getting societies", err)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -182,7 +182,7 @@ func EditSociety(c echo.Context) error {
 	}
 
 	htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-		Message:  "Edited society successfully",
+		Heading:  "Edited society successfully",
 		Closable: true,
 		Variant:  utils.AlertVariantSuccess,
 		Duration: 3000,
@@ -211,7 +211,7 @@ func CreateSociety(c echo.Context) error {
 	if err != nil {
 		slog.Error("in getting form values", err)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -247,7 +247,7 @@ func CreateSociety(c echo.Context) error {
 	if err != nil {
 		slog.Error("in getting student", err)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -289,7 +289,7 @@ func CreateSociety(c echo.Context) error {
 			}))
 		}
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -301,7 +301,7 @@ func CreateSociety(c echo.Context) error {
 	if err != nil {
 		slog.Error("in getting societies", err)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -310,7 +310,7 @@ func CreateSociety(c echo.Context) error {
 	}
 
 	htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-		Message:  "Edited society successfully",
+		Heading:  "Edited society successfully",
 		Closable: true,
 		Variant:  utils.AlertVariantSuccess,
 		Duration: 3000,
@@ -319,14 +319,14 @@ func CreateSociety(c echo.Context) error {
 }
 
 func EnableSociety(c echo.Context) error {
-	params := struct{
+	params := struct {
 		SocietyID int `param:"id"`
 	}{}
 	err := (&echo.DefaultBinder{}).BindPathParams(c, &params)
 	if err != nil {
 		slog.Error("in getting params from url", err)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -336,12 +336,12 @@ func EnableSociety(c echo.Context) error {
 
 	_, err = database.DBQueries.SetSocietyActiveStatus(context.Background(), database.SetSocietyActiveStatusParams{
 		Active: pgtype.Bool{Bool: true, Valid: true},
-		ID: int32(params.SocietyID),
+		ID:     int32(params.SocietyID),
 	})
 	if err != nil {
 		slog.Error("in setting society active status", err)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -353,7 +353,7 @@ func EnableSociety(c echo.Context) error {
 	if err != nil {
 		slog.Error("in getting societies", err)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -362,7 +362,7 @@ func EnableSociety(c echo.Context) error {
 	}
 
 	htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-		Message:  "Enabled society successfully",
+		Heading:  "Enabled society successfully",
 		Closable: true,
 		Variant:  utils.AlertVariantSuccess,
 		Duration: 3000,
@@ -371,14 +371,14 @@ func EnableSociety(c echo.Context) error {
 }
 
 func DisableSociety(c echo.Context) error {
-	params := struct{
+	params := struct {
 		SocietyID int `param:"id"`
 	}{}
 	err := (&echo.DefaultBinder{}).BindPathParams(c, &params)
 	if err != nil {
 		slog.Error("in getting params from url", err)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -388,12 +388,12 @@ func DisableSociety(c echo.Context) error {
 
 	_, err = database.DBQueries.SetSocietyActiveStatus(context.Background(), database.SetSocietyActiveStatusParams{
 		Active: pgtype.Bool{Bool: false, Valid: true},
-		ID: int32(params.SocietyID),
+		ID:     int32(params.SocietyID),
 	})
 	if err != nil {
 		slog.Error("in setting society active status", err)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -405,7 +405,7 @@ func DisableSociety(c echo.Context) error {
 	if err != nil {
 		slog.Error("in getting societies", err)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -414,8 +414,8 @@ func DisableSociety(c echo.Context) error {
 	}
 
 	htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-		Message:  "Disabled society successfully",
-		Closable: true,
+		Heading: "Disabled society successfully",
+		Closable: false,
 		Variant:  utils.AlertVariantSuccess,
 		Duration: 3000,
 	})).Write(c.Response().Writer)

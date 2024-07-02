@@ -12,7 +12,8 @@ const (
 
 type AlertDetails struct {
 	Closable bool         `json:"closable"`
-	Message  string       `json:"message"`
+	Heading  string       `json:"heading"`
+	Messages []string     `json:"messages"`
 	Variant  AlertVariant `json:"variant"`
 	Duration int          `json:"duration"`
 }

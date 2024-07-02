@@ -52,7 +52,7 @@ func CooridnatorLogin(c echo.Context) error {
 	if err != nil {
 		slog.Error("error in checking if coordinator exist", err)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading: "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -70,12 +70,12 @@ func CooridnatorLogin(c echo.Context) error {
 	if err != nil {
 		slog.Error("error in matching passwords", err)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading: "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
 		})).Write(c.Response().Writer)
-		return c.String(http.StatusInternalServerError, "Interanl server error")
+		return c.String(http.StatusInternalServerError, "Internal server error")
 	}
 
 	// if user entered wrong password
@@ -104,7 +104,7 @@ func CooridnatorLogin(c echo.Context) error {
 	if err != nil {
 		slog.Error("error in generating jwt token", err)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading: "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -151,7 +151,7 @@ func StudentLogin(c echo.Context) error {
 	if err != nil {
 		slog.Error("error in checking if student exist", err)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading: "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -170,7 +170,7 @@ func StudentLogin(c echo.Context) error {
 	if err != nil {
 		slog.Error("error in matching passwords", err)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading: "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -189,7 +189,7 @@ func StudentLogin(c echo.Context) error {
 	if err != nil {
 		slog.Error("error in checking if student is president", err)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading: "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -225,7 +225,7 @@ func StudentLogin(c echo.Context) error {
 	if err != nil {
 		slog.Error("error in generating token", err)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading: "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,

@@ -24,7 +24,7 @@ func ShowStudentDashboard(c echo.Context) error {
 			"error", err,
 		)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -43,7 +43,7 @@ func ShowStudentDashboard(c echo.Context) error {
 				"error", err,
 			)
 			htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-				Message:  "Internal server error",
+				Heading:  "Internal server error",
 				Closable: true,
 				Variant:  utils.AlertVariantDanger,
 				Duration: 3000,
@@ -58,7 +58,7 @@ func ShowStudentDashboard(c echo.Context) error {
 				"error", err,
 			)
 			htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-				Message:  "Internal server error",
+				Heading:  "Internal server error",
 				Closable: true,
 				Variant:  utils.AlertVariantDanger,
 				Duration: 3000,
@@ -74,7 +74,7 @@ func ShowStudentDashboard(c echo.Context) error {
 			"error", err,
 		)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -89,7 +89,7 @@ func ShowStudentDashboard(c echo.Context) error {
 			"error", err,
 		)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -115,7 +115,7 @@ func EnrollInSociety(c echo.Context) error {
 			"error", err,
 		)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -135,7 +135,7 @@ func EnrollInSociety(c echo.Context) error {
 			"error", err,
 		)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -149,7 +149,7 @@ func EnrollInSociety(c echo.Context) error {
 			"error", err,
 		)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Not Authorized to change this resource",
+			Heading:  "Not Authorized to change this resource",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -167,7 +167,7 @@ func EnrollInSociety(c echo.Context) error {
 			"error", err,
 		)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -186,7 +186,7 @@ func EnrollInSociety(c echo.Context) error {
 				"error", err,
 			)
 			htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-				Message:  "Internal server error",
+				Heading:  "Internal server error",
 				Closable: true,
 				Variant:  utils.AlertVariantDanger,
 				Duration: 3000,
@@ -201,7 +201,7 @@ func EnrollInSociety(c echo.Context) error {
 				"error", err,
 			)
 			htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-				Message:  "Internal server error",
+				Heading:  "Internal server error",
 				Closable: true,
 				Variant:  utils.AlertVariantDanger,
 				Duration: 3000,
@@ -217,7 +217,7 @@ func EnrollInSociety(c echo.Context) error {
 			"error", err,
 		)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -232,7 +232,7 @@ func EnrollInSociety(c echo.Context) error {
 			"error", err,
 		)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -241,7 +241,7 @@ func EnrollInSociety(c echo.Context) error {
 	}
 
 	htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-		Message:  "Enrolled in society successfully",
+		Heading:  "Enrolled in society successfully",
 		Closable: true,
 		Variant:  utils.AlertVariantSuccess,
 		Duration: 3000,
@@ -264,7 +264,7 @@ func LeaveSociety(c echo.Context) error {
 			"error", err,
 		)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -284,7 +284,7 @@ func LeaveSociety(c echo.Context) error {
 			"error", err,
 		)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -298,7 +298,7 @@ func LeaveSociety(c echo.Context) error {
 			"error", err,
 		)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Not Authorized to change this resource",
+			Heading:  "Not Authorized to change this resource",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -316,7 +316,7 @@ func LeaveSociety(c echo.Context) error {
 			"error", err,
 		)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -335,7 +335,7 @@ func LeaveSociety(c echo.Context) error {
 				"error", err,
 			)
 			htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-				Message:  "Internal server error",
+				Heading:  "Internal server error",
 				Closable: true,
 				Variant:  utils.AlertVariantDanger,
 				Duration: 3000,
@@ -350,7 +350,7 @@ func LeaveSociety(c echo.Context) error {
 				"error", err,
 			)
 			htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-				Message:  "Internal server error",
+				Heading:  "Internal server error",
 				Closable: true,
 				Variant:  utils.AlertVariantDanger,
 				Duration: 3000,
@@ -366,7 +366,7 @@ func LeaveSociety(c echo.Context) error {
 			"error", err,
 		)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -381,7 +381,7 @@ func LeaveSociety(c echo.Context) error {
 			"error", err,
 		)
 		htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-			Message:  "Internal server error",
+			Heading:  "Internal server error",
 			Closable: true,
 			Variant:  utils.AlertVariantDanger,
 			Duration: 3000,
@@ -390,7 +390,7 @@ func LeaveSociety(c echo.Context) error {
 	}
 
 	htmx.NewResponse().AddTrigger(htmx.TriggerObject("alert", utils.AlertDetails{
-		Message:  "Left in society successfully",
+		Heading:  "Left in society successfully",
 		Closable: true,
 		Variant:  utils.AlertVariantSuccess,
 		Duration: 3000,
